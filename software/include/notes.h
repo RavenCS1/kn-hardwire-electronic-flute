@@ -29,4 +29,4 @@ static const float note_frequencies[] = {
     NOTE_C5
 };
 
-#endif // NOTES_H
+#endif

@@ -21,4 +21,4 @@ float get_frequency(uint8_t button_mask);
 uint16_t get_volume(void);
 uint16_t lowpass_iir(uint16_t new_sample);
 
-#endif // FUNCTIONS_H
+#endif

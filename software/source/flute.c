@@ -1,7 +1,7 @@
 #include "functions.h"
 
 int main(void) {
-    #if DEBUG_MODE == 1
+    #if DEBUG_MODE
 	    stdio_init_all();
     #endif
 

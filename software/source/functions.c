@@ -2,7 +2,7 @@
 
 void generate_square_wave(const float freq, uint16_t volume) {
 	/* Division by 0 check */
-	if (freq < 1) volume = 0;
+	if (freq < 1.0f) volume = 0;
 
     const uint8_t slice_num = pwm_gpio_to_slice_num(OUT_PIN);
     float clk_div;
@@ -23,8 +23,8 @@ void generate_square_wave(const float freq, uint16_t volume) {
     // Lower bound check
     if (clk_div < 1.0f) clk_div = 1.0f;
     
-    #if DEBUG_MODE == 1
-        printf("freq: %f, target_div: %f, actual_div: %f\n", freq, target_div, clk_div);
+    #if DEBUG_MODE
+        (void) printf("freq: %f, target_div: %f, actual_div: %f\n", freq, target_div, clk_div);
     #endif
     
     pwm_set_clkdiv(slice_num, clk_div);
@@ -42,7 +42,7 @@ uint16_t volume_to_duty(uint16_t volume) {
 }
 
 uint16_t get_volume(void) {
-	static uint16_t diff_buffer[DIFF_BUFFER_SIZE] = {0};
+	static uint16_t diff_buffer[DIFF_BUFFER_SIZE] = {};
 	static uint16_t buffer_index = 0;
 
 	// How many pass threshold
@@ -58,7 +58,7 @@ uint16_t get_volume(void) {
 	diff_buffer[buffer_index] = new_diff;
 	buffer_index = (buffer_index + 1) % DIFF_BUFFER_SIZE;
 
-	#if DEBUG_MODE == 1
+	#if DEBUG_MODE
 		(void) printf("diff: %d\n", new_diff);
 	#endif
 
@@ -69,7 +69,7 @@ uint16_t get_volume(void) {
 		diff_count--;
 	}
 
-	#if DEBUG_MODE == 1
+	#if DEBUG_MODE
 		(void) printf("diff count: %d\n", diff_count);
 	#endif
 
@@ -92,7 +92,7 @@ uint16_t get_volume(void) {
 }
 
 uint16_t lowpass_iir(uint16_t new_sample) {
-    static float filtered = 0;
+    static float filtered = 0.0f;
     static bool first_run = true;
     
     if (first_run) {
