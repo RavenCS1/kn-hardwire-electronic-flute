@@ -1,8 +1,10 @@
 name: Pico Firmware Build
 
 on:
-  push: [ main ]
-  pull_request: [ main ]
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
@@ -14,29 +16,31 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: recursive
-          fetch-depth: 0
 
-      # 1. Pobierz Pico SDK (jeśli brak submodule)
       - name: Setup Pico SDK
         run: |
           if [ ! -d "pico-sdk" ]; then
-            echo "Downloading Pico SDK..."
-            git clone -b master --depth=1 https://github.com/raspberrypi/pico-sdk.git
+            git clone --depth 1 https://github.com/raspberrypi/pico-sdk
+            cd pico-sdk && git submodule update --init
           fi
-          cd pico-sdk
-          git submodule update --init
-          echo "PICO_SDK_PATH=$(pwd)" >> $GITHUB_ENV
-          echo "PICO_SDK_PATH=$PICO_SDK_PATH"
+          echo "PICO_SDK_PATH=$(pwd)/pico-sdk" >> $GITHUB_ENV
 
-      # 2. Toolchain ARM
       - name: Install ARM toolchain
         run: |
           sudo apt update -qq
-          sudo apt install -y -qq cmake ninja-build \
-            gcc-arm-none-eabi libnewlib-arm-none-eabi \
-            python3 python3-pip
+          sudo apt install -y cmake ninja-build gcc-arm-none-eabi python3-pip
 
-      # 3. Verify
-      - name: Verify tools
+      - name: Configure
         run: |
-          arm-none-eabi-gcc --version |
+          mkdir -p software/build
+          cd software/build
+          cmake .. -DPICO_SDK_PATH=$PICO_SDK_PATH -GNinja
+
+      - name: Build
+        run: cd software/build && ninja
+
+      - name: Upload firmware
+        uses: actions/upload-artifact@v4
+        with:
+          name: firmware
+          path: software/build/*.uf2
