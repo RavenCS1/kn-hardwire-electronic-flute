@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.13)
 
-set(CMAKE_C_STANDARD 11)
+set(CMAKE_C_STANDARD 23)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
@@ -39,7 +39,7 @@ set_property(CACHE PROJECT_TYPE PROPERTY STRINGS INT FLOAT)
 pico_sdk_init()
 
 # Compiler options
-add_compile_options(-Wall -Wextra -O2)
+add_compile_options(-std=c2x -Wall -Wextra -O3)
 
 # =====================================================
 # Add include and source directories

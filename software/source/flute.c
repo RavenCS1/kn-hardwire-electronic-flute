@@ -1,13 +1,13 @@
 #include "functions.h"
 
-int main(void) {
+int main(void){
     #if DEBUG_MODE
 	    stdio_init_all();
     #endif
 
-    const uint16_t buttons[BUTTON_COUNT] = {BUTTON1, BUTTON2, BUTTON3, BUTTON4, BUTTON5, BUTTON6, BUTTON7, BUTTON8};
+    constexpr uint16_t buttons[BUTTON_COUNT] = {BUTTON1, BUTTON2, BUTTON3, BUTTON4, BUTTON5, BUTTON6, BUTTON7, BUTTON8};
 
-    for (register uint8_t i = 0; i < BUTTON_COUNT; ++i) {
+    for(register uint8_t i = 0; i < BUTTON_COUNT; ++i){
 		gpio_init(buttons[i]);
 		gpio_set_dir(buttons[i], GPIO_IN);
 		gpio_pull_up(buttons[i]);
@@ -22,12 +22,11 @@ int main(void) {
 
     uint8_t button_mask;
 
-    while (true) {
+    while(true){
 		button_mask = 0;
-		for (register uint8_t i = 0; i < BUTTON_COUNT; ++i) {
-			if (gpio_get(buttons[i])) {
+		for(register uint8_t i = 0; i < BUTTON_COUNT; ++i){
+			if (gpio_get(buttons[i]))
 				button_mask |= (1 << i);
-			}
 		}
 
 		generate_square_wave(get_frequency(button_mask), lowpass_iir(get_volume()));

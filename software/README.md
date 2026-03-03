@@ -22,6 +22,8 @@ cd build
 cmake ..
 ```
 
+Our code requires the newest version of GCC to compile, namely 15.2.0
+
 There are CMake flags available for easier debugging and development:   
 *No debug on default (no flag passed)*
 ```

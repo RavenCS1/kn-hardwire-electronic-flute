@@ -1,5 +1,5 @@
 #ifndef FUNCTIONS_H
-#define FUNCTIONS_H
+#define FUNCTIONS_H 1
 
 #include "pico/stdlib.h"
 #include "hardware/adc.h"
@@ -10,7 +10,6 @@
 #include "constants.h"
 
 #include <stdlib.h>
-#include <stdbool.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <math.h>
