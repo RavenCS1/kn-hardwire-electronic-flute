@@ -1,45 +1,46 @@
-name: Pico Firmware Build
+name: Build project
 
 on:
   push:
-    branches: [ main ]
   pull_request:
-    branches: [ main ]
-  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
         with:
           submodules: recursive
 
-      - name: Setup Pico SDK
+      - name: Install dependencies
         run: |
-          if [ ! -d "pico-sdk" ]; then
-            git clone --depth 1 https://github.com/raspberrypi/pico-sdk
-            cd pico-sdk && git submodule update --init
-          fi
-          echo "PICO_SDK_PATH=$(pwd)/pico-sdk" >> $GITHUB_ENV
+          sudo apt update
+          sudo apt install -y cmake gcc-arm-none-eabi
 
-      - name: Install ARM toolchain
+      - name: Install GCC 15.2.0 ARM
         run: |
-          sudo apt update -qq
-          sudo apt install -y cmake ninja-build gcc-arm-none-eabi python3-pip
+          sudo apt update
+          sudo apt install -y gcc-arm-none-eabi-15
+          sudo update-alternatives --install /usr/bin/arm-none-eabi-gcc arm-none-eabi-gcc /usr/bin/arm-none-eabi-gcc-15 100
+          sudo update-alternatives --install /usr/bin/arm-none-eabi-g++ arm-none-eabi-g++ /usr/bin/arm-none-eabi-g++-15 100
 
-      - name: Configure
+      - name: Verify GCC ARM 15
+        run: arm-none-eabi-gcc --version
+
+      - name: Configure CMake
         run: |
-          mkdir -p software/build
+          mkdir software/build
           cd software/build
-          cmake .. -DPICO_SDK_PATH=$PICO_SDK_PATH -GNinja
+          cmake ..
 
-      - name: Build
-        run: cd software/build && ninja
+      - name: Build project
+        run: |
+          cd software/build
+          make
 
-      - name: Upload firmware
+      - name: Upload .uf2 firmware
         uses: actions/upload-artifact@v4
         with:
           name: firmware
