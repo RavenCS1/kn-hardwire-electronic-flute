@@ -19,6 +19,11 @@ jobs:
           sudo apt update
           sudo apt install -y cmake gcc-arm-none-eabi
 
+      # INSTALACJA GCC 14.2.0
+      - name: Install GCC 14.2
+        run: |
+          sudo apt install -y gcc-14 g++-14
+
       - name: Download Pico SDK + pico_sdk_import.cmake
         run: |
           git clone --depth 1 https://github.com/raspberrypi/pico-sdk.git
@@ -33,7 +38,8 @@ jobs:
         run: |
           mkdir software/build
           cd software/build
-          cmake ..
+          # Używaj gcc-14 / g++-14 dla wszystkiego
+          CC=gcc-14 CXX=g++-14 cmake ..
 
       - name: Build project
         run: |
