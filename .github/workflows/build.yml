@@ -19,8 +19,8 @@ jobs:
           sudo apt update
           sudo apt install -y cmake gcc-arm-none-eabi
 
-      # INSTALACJA GCC 14.2.0
-      - name: Install GCC 14.2
+      # INSTALACJA GCC 14.2.0 (host)
+      - name: Install GCC 14.2 (host)
         run: |
           sudo apt install -y gcc-14 g++-14
 
@@ -34,11 +34,11 @@ jobs:
           include(${PICO_SDK_PATH}/pico_sdk_init.cmake)
           EOF
 
-      - name: Configure CMake
+      - name: Configure CMake (host z GCC 14.2.0, target nadal arm-none-eabi)
         run: |
           mkdir software/build
           cd software/build
-          # Używaj gcc-14 / g++-14 dla wszystkiego
+          # Host: użyj gcc-14/g++-14 dla wszelkich kompilacji host‑owych (np. picotool)
           CC=gcc-14 CXX=g++-14 cmake ..
 
       - name: Build project
