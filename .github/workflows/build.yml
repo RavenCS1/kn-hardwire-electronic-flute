@@ -17,10 +17,17 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt update
-          sudo apt install -y cmake gcc-arm-none-eabi  
+          sudo apt install -y cmake gcc-arm-none-eabi
 
-      - name: Verify GCC ARM
-        run: arm-none-eabi-gcc --version  
+      - name: Download Pico SDK + pico_sdk_import.cmake
+        run: |
+          git clone --depth 1 https://github.com/raspberrypi/pico-sdk.git
+          cd pico-sdk && git submodule update --init
+          # Utwórz wymagany plik
+          cat > pico_sdk_import.cmake << 'EOF'
+          set(PICO_SDK_PATH "${CMAKE_CURRENT_LIST_DIR}/pico-sdk")
+          include(${PICO_SDK_PATH}/pico_sdk_init.cmake)
+          EOF
 
       - name: Configure CMake
         run: |

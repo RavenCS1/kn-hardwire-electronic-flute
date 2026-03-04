@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 3.13)
 
+set(CMAKE_C_COMPILER /opt/gcc-14.2.0/bin/gcc)
+set(CMAKE_CXX_COMPILER /opt/gcc-14.2.0/bin/g++)
+
 set(CMAKE_C_STANDARD 23)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
