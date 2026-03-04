@@ -19,11 +19,15 @@ jobs:
           sudo apt update
           sudo apt install -y cmake
 
-      # INSTALACJA GCC 14.2.0 (host + arm-none-eabi)
-      - name: Install GCC 14.2 and ARM toolchain
+      # INSTALACJA GCC 14.2.0 (host + arm-none-eabi z TAR)
+      - name: Install GCC 14.2 (host + ARM none eabi 14.2.0)
         run: |
+          # GCC 14.2.0 dla hosta (już jest, ale na wszelki wypadek):
           sudo apt install -y gcc-14 g++-14
-          sudo apt install -y gcc-arm-none-eabi-14
+          # Pobierz GNU Arm Embedded Toolchain 14.2.0
+          wget https://developer.arm.com/-/media/Files/downloads/gnu-rm/14.2.0/gcc-arm-none-eabi-14.2.0-x86_64-linux.tar.bz2
+          sudo mkdir -p /opt/arm-none-eabi-14.2.0
+          sudo tar -C /opt/arm-none-eabi-14.2.0 --strip-components=1 -xjf gcc-arm-none-eabi-14.2.0-x86_64-linux.tar.bz2
 
       - name: Download Pico SDK + pico_sdk_import.cmake
         run: |
@@ -40,8 +44,8 @@ jobs:
           mkdir software/build
           cd software/build
           # Użyj GCC 14.2.0 dla hosta i arm-none-eabi
-          CC=arm-none-eabi-gcc-14 \
-          CXX=arm-none-eabi-g++-14 \
+          CC=/opt/arm-none-eabi-14.2.0/bin/arm-none-eabi-gcc \
+          CXX=/opt/arm-none-eabi-14.2.0/bin/arm-none-eabi-g++ \
           cmake ..
 
       - name: Build project
