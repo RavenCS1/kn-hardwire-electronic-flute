@@ -38,7 +38,7 @@ jobs:
         run: |
           mkdir software/build
           cd software/build
-          # Host: użyj gcc-14/g++-14 dla wszelkich kompilacji host‑owych (np. picotool)
+          # Host: użyj gcc-14 / g++-14 dla wszystkich kompilacji hostowych (np. picotool)
           CC=gcc-14 CXX=g++-14 cmake ..
 
       - name: Build project
