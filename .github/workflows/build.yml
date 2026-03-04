@@ -17,12 +17,13 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt update
-          sudo apt install -y cmake gcc-arm-none-eabi
+          sudo apt install -y cmake
 
-      # INSTALACJA GCC 14.2.0 (host)
-      - name: Install GCC 14.2 (host)
+      # INSTALACJA GCC 14.2.0 (host + arm-none-eabi)
+      - name: Install GCC 14.2 and ARM toolchain
         run: |
           sudo apt install -y gcc-14 g++-14
+          sudo apt install -y gcc-arm-none-eabi-14
 
       - name: Download Pico SDK + pico_sdk_import.cmake
         run: |
@@ -34,12 +35,14 @@ jobs:
           include(${PICO_SDK_PATH}/pico_sdk_init.cmake)
           EOF
 
-      - name: Configure CMake (host z GCC 14.2.0, target nadal arm-none-eabi)
+      - name: Configure CMake (GCC 14.2.0 dla hosta i targeta)
         run: |
           mkdir software/build
           cd software/build
-          # Host: użyj gcc-14 / g++-14 dla wszystkich kompilacji hostowych (np. picotool)
-          CC=gcc-14 CXX=g++-14 cmake ..
+          # Użyj GCC 14.2.0 dla hosta i arm-none-eabi
+          CC=arm-none-eabi-gcc-14 \
+          CXX=arm-none-eabi-g++-14 \
+          cmake ..
 
       - name: Build project
         run: |
